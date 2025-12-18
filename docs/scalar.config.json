@@ -1,16 +1,31 @@
 {
   "$schema": "https://cdn.scalar.com/schema/scalar-config.json",
-  "subdomain": "api-transtrack",
+  "subdomain": "predictive-emission-api",
+  "pageTitle": "Predictive Emission Forecasting API",
+  "favicon": "https://cdn.scalar.com/images/favicon.svg",
   "guides": [
     {
-      "name": "My awesome documentation",
+      "name": "Documentation",
       "sidebar": [
         {
           "path": "docs/introduction.md",
+          "type": "page"
+        },
+        {
+          "path": "docs/getting-started.md",
+          "type": "page"
+        },
+        {
+          "path": "docs/api-endpoints.md",
           "type": "page"
         }
       ]
     }
   ],
-  "references": []
+  "references": [
+    {
+      "url": "http://localhost:8000/openapi.json",
+      "name": "Predictive Emission API"
+    }
+  ]
 }

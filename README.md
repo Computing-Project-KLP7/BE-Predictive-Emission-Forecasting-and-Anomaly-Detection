@@ -39,7 +39,7 @@ Melengkapi siklus dari data hingga tindakan melalui:
 * **Backend Engineer**: Amirah
 * **Frontend Engineer**: Marcel
 * **Data Analyst**: Aisya
-* **AI Engineer**: Ziza
+* **AI Engineer**: Azizah
 
 ---
 

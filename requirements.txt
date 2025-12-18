@@ -1,5 +1,5 @@
 fastapi
-uvicorn[standard]
-SQLAlchemy
+uvicorn
 pydantic
-python-dotenv
+scikit-learn
+joblib

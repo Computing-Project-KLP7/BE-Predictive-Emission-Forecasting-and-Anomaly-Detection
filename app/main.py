@@ -1,14 +1,12 @@
 from fastapi import FastAPI
-from app.api.routes import router as api_router
+from app.api.v1.router import api_router
 
-app = FastAPI(title="Predictive Emission API")
 
-app.include_router(api_router, prefix="/api")
+app = FastAPI(
+    title="TransTRACK API",
+    description="Predictive Emission Forecasting & Anomaly Detection",
+    version="1.0.0",
+)
 
-@app.get("/")
-async def root():
-    return {"message": "API berjalan"}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+app.include_router(api_router, prefix="/api/v1")

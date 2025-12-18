@@ -40,21 +40,26 @@ async def login_with_transtrack(email: str, password: str) -> Dict[str, Any]:
                 params=params
             )
             
-            # Check response status
-            if response.status_code != 200:
-                logger.error(
-                    f"Login failed: {response.status_code} - {response.text}"
+            response_data = response.json()
+            
+            # Check response status - success jika status code 200
+            if response.status_code == 200:
+                logger.info(f"Login successful untuk email: {email}")
+                return response_data
+            else:
+                # Handle error response dari API
+                error_msg = response_data.get("message", "Login gagal")
+                logger.warning(
+                    f"Login failed with status {response.status_code}: {error_msg}"
                 )
                 raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Email atau password salah"
+                    status_code=response.status_code if response.status_code >= 400 else status.HTTP_401_UNAUTHORIZED,
+                    detail=error_msg
                 )
             
-            response_data = response.json()
-            logger.info(f"Login successful untuk email: {email}")
-            
-            return response_data
-            
+    except HTTPException:
+        # Re-raise HTTPException yang sudah dibuat
+        raise
     except httpx.RequestError as e:
         logger.error(f"Request error saat login: {str(e)}")
         raise HTTPException(

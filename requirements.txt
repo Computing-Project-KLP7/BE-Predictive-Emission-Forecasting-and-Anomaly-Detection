@@ -1,5 +1,7 @@
 fastapi
 uvicorn
 pydantic
+pydantic[email]
 scikit-learn
 joblib
+httpx

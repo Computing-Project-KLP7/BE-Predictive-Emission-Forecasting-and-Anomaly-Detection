@@ -6,7 +6,7 @@ from app.schemas.emission import EmissionRequest, EmissionResponse
 router = APIRouter()
 
 
-# @router.post("/predict", response_model=EmissionResponse)
-# def predict(data: EmissionRequest):
-#     result = predict_emission(data)
-#     return result
+@router.post("/predict", response_model=EmissionResponse)
+def predict(data: EmissionRequest):
+    # result = predict_emission(data)
+    return ()

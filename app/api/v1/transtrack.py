@@ -1,6 +1,6 @@
 from typing import Any
 from fastapi import APIRouter, Query
-from app.services.transtrack_service import get_devices, get_history
+from app.services.transtrack_service import get_devices, get_history, simplify_devices
 
 router = APIRouter()
 
@@ -17,6 +17,24 @@ async def devices(
     - user_api_hash: token obtained from login
     """
     return await get_devices(lang=lang, user_api_hash=user_api_hash)
+
+
+@router.get("/devices-detail")
+async def devices_detail(
+    lang: str = Query("en", description="Language, e.g. 'en'"),
+    user_api_hash: str = Query(..., description="user_api_hash token from login")
+) -> list[dict]:
+    """Return simplified list of devices (id and name only) from Transtrack API.
+
+    Query params:
+    - lang: language code (default 'en')
+    - user_api_hash: token obtained from login
+
+    Returns:
+    - List of devices with only {id, name} fields
+    """
+    full_devices = await get_devices(lang=lang, user_api_hash=user_api_hash)
+    return simplify_devices(full_devices)
 
 
 @router.get("/history")

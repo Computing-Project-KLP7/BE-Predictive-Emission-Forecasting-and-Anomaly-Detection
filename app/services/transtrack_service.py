@@ -137,3 +137,48 @@ async def get_history(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Cannot reach Transtrack API"
         )
+
+
+def simplify_devices(devices_response: Dict[str, Any]) -> list[dict]:
+    """
+    Ekstrak field-field penting dari response devices.
+
+    Args:
+        devices_response: Full response dari get_devices
+
+    Returns:
+        List of dicts dengan field: id, name, online, time, speed, total_distance,
+        lat, lng, altitude, plate_number (dari device_data), driver_name (dari driver_data)
+    """
+    simplified = []
+
+    # devices_response adalah list of groups dengan struktur:
+    # [{"id": 0, "title": "...", "items": [...]}, ...]
+    if isinstance(devices_response, list):
+        for group in devices_response:
+            items = group.get("items", [])
+            for item in items:
+                device_dict = {
+                    "id": item.get("id"),
+                    "name": item.get("name"),
+                    "online": item.get("online"),
+                    "time": item.get("time"),
+                    "speed": item.get("speed"),
+                    "total_distance": item.get("total_distance"),
+                    "lat": item.get("lat"),
+                    "lng": item.get("lng"),
+                    "altitude": item.get("altitude"),
+                }
+
+                # Extract nested fields
+                device_data = item.get("device_data", {})
+                if isinstance(device_data, dict):
+                    device_dict["plate_number"] = device_data.get("plate_number")
+
+                driver_data = item.get("driver_data", {})
+                if isinstance(driver_data, dict):
+                    device_dict["driver_name"] = driver_data.get("name")
+
+                simplified.append(device_dict)
+
+    return simplified

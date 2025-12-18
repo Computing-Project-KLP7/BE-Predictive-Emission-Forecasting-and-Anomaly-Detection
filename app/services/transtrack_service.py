@@ -1,6 +1,8 @@
 import httpx
 import logging
 import re
+import csv
+import io
 from typing import Any, Dict
 from fastapi import HTTPException, status
 
@@ -8,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 TRANSTRACK_DEVICES_URL = "https://telematics.transtrack.id/api/get_devices"
 TRANSTRACK_HISTORY_URL = "https://telematics.transtrack.id/api/get_history"
+REVERSE_GEOCODING_URL = "https://geo.transtrack.id/reverse"
 
 
 async def get_devices(lang: str, user_api_hash: str) -> Dict[str, Any]:
@@ -323,3 +326,168 @@ def process_history_data(history_response: Dict[str, Any]) -> list[dict]:
 
     return rows
 
+
+# ===== REVERSE GEOCODING FUNCTIONS =====
+
+async def get_address(lat: float, lon: float) -> Dict[str, Any]:
+    """
+    Fetch alamat dari koordinat latitude dan longitude menggunakan reverse geocoding API.
+
+    Args:
+        lat: Latitude
+        lon: Longitude
+
+    Returns:
+        Dict dengan display_name dan address details
+
+    Raises:
+        HTTPException jika request gagal
+    """
+    params = {
+        "format": "json",
+        "lat": lat,
+        "lon": lon,
+        "zoom": 18,
+        "addressdetails": 1,
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.get(REVERSE_GEOCODING_URL, params=params)
+
+            try:
+                data = resp.json()
+            except ValueError:
+                logger.error("Invalid JSON response from reverse geocoding API")
+                raise HTTPException(
+                    status_code=status.HTTP_502_BAD_GATEWAY,
+                    detail="Invalid response from geocoding API",
+                )
+
+            if resp.status_code == 200:
+                # Format response
+                result = {
+                    "display_name": data.get("display_name"),
+                    "address": {},
+                }
+
+                # Extract address details
+                if "address" in data and isinstance(data["address"], dict):
+                    address_obj = data["address"]
+                    result["address"] = {
+                        "road": address_obj.get("road"),
+                        "village": address_obj.get("village"),
+                        "county": address_obj.get("county"),
+                        "municipality": address_obj.get("municipality"),
+                        "region": address_obj.get("region"),
+                        "state": address_obj.get("state"),
+                        "postcode": address_obj.get("postcode"),
+                        "country": address_obj.get("country"),
+                        "country_code": address_obj.get("country_code"),
+                    }
+
+                return result
+            else:
+                msg = data.get("message") if isinstance(data, dict) else None
+                detail = msg or f"Geocoding API returned status {resp.status_code}"
+                logger.warning(f"get_address failed: {resp.status_code} - {detail}")
+                raise HTTPException(
+                    status_code=resp.status_code
+                    if resp.status_code >= 400
+                    else status.HTTP_400_BAD_REQUEST,
+                    detail=detail,
+                )
+
+    except httpx.RequestError as exc:
+        logger.error(f"Request error calling reverse geocoding API: {exc}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Cannot reach geocoding API",
+        )
+
+# ===== CSV EXPORT FUNCTIONS =====
+
+def devices_to_csv(devices_data: list[dict]) -> str:
+    """
+    Convert devices list to CSV format.
+
+    Args:
+        devices_data: List dari simplify_devices
+
+    Returns:
+        CSV string
+    """
+    if not devices_data:
+        return ""
+
+    output = io.StringIO()
+    fieldnames = [
+        "id",
+        "name",
+        "online",
+        "time",
+        "speed",
+        "total_distance",
+        "lat",
+        "lng",
+        "altitude",
+        "plate_number",
+        "driver_name",
+    ]
+
+    writer = csv.DictWriter(output, fieldnames=fieldnames)
+    writer.writeheader()
+
+    for device in devices_data:
+        row = {}
+        for field in fieldnames:
+            row[field] = device.get(field, "")
+        writer.writerow(row)
+
+    return output.getvalue()
+
+
+def history_to_csv(history_data: list[dict]) -> str:
+    """
+    Convert processed history list to CSV format.
+
+    Args:
+        history_data: List dari process_history_data
+
+    Returns:
+        CSV string
+    """
+    if not history_data:
+        return ""
+
+    output = io.StringIO()
+    fieldnames = [
+        "timestamp",
+        "device_id",
+        "latitude",
+        "longitude",
+        "speed",
+        "ignition",
+        "motion",
+        "odometer_km",
+        "engine_hours",
+        "fuel_level_l",
+        "rpm",
+        "battery_voltage",
+        "sat",
+        "hdop",
+        "pdop",
+        "valid",
+        "status",
+    ]
+
+    writer = csv.DictWriter(output, fieldnames=fieldnames)
+    writer.writeheader()
+
+    for item in history_data:
+        row = {}
+        for field in fieldnames:
+            row[field] = item.get(field, "")
+        writer.writerow(row)
+
+    return output.getvalue()

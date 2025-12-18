@@ -1,5 +1,6 @@
 import httpx
 import logging
+import re
 from typing import Any, Dict
 from fastapi import HTTPException, status
 
@@ -182,3 +183,143 @@ def simplify_devices(devices_response: Dict[str, Any]) -> list[dict]:
                 simplified.append(device_dict)
 
     return simplified
+
+
+# Status mapping untuk history
+STATUS_MAP = {
+    1: "Drive",
+    2: "Idle",
+    3: "Start",
+    4: "End",
+    5: "Ack"
+}
+
+
+# ===== SENSOR DATA PROCESSING FUNCTIONS =====
+
+def parse_other_string(other_str: str) -> Dict[str, Any]:
+    """
+    Mem-parsing string sensor 'other' menggunakan regular expression.
+    Format: <key>value<key2>value2<...
+
+    Args:
+        other_str: String sensor data
+
+    Returns:
+        Dictionary dengan key-value pairs, boolean untuk ignition/motion, float untuk values lain
+    """
+    if not other_str:
+        return {}
+
+    # Regex pattern untuk menemukan <tag>nilai<tag_berikutnya
+    pattern = re.compile(r'<(\w+)>([^<]*)<')
+    matches = pattern.findall(other_str)
+
+    data = {}
+    for key, value in matches:
+        key_lower = key.lower()
+        if key_lower in ['ignition', 'motion']:
+            # Konversi tag boolean
+            data[key] = value.lower() == 'true'
+        else:
+            try:
+                # Coba konversi nilai sensor ke float/angka
+                data[key] = float(value)
+            except ValueError:
+                data[key] = value
+
+    return data
+
+
+def process_history_data(history_response: Dict[str, Any]) -> list[dict]:
+    """
+    Memproses history data dari API untuk mengekstrak 16 kolom yang diminta
+    dengan parsing sensor 'other', faktor skala, dan transformasi nilai.
+
+    Args:
+        history_response: Response dari get_history API
+
+    Returns:
+        List of dicts dengan 16 field: timestamp, device_id, latitude, longitude,
+        speed, ignition, motion, odometer_km, engine_hours, fuel_level_l, rpm,
+        battery_voltage, sat, hdop, pdop, valid, status
+    """
+    rows = []
+
+    # Iterasi data items dari history response
+    items = history_response.get("items", []) if isinstance(history_response, dict) else []
+
+    for group in items:
+        # Jika group adalah dict dengan struktur {status, items: [...]}
+        group_items = group.get("items", []) if isinstance(group, dict) else []
+
+        for item in group_items:
+            # ===== BASE JSON FIELDS (Direct Access) =====
+            timestamp = item.get("time")
+            device_id = item.get("device_id")
+            latitude = item.get("lat")
+            longitude = item.get("lng")
+            speed = item.get("speed")  # speed_kmh
+
+            # ===== PARSE SENSOR DATA ('other' string) =====
+            other_data = parse_other_string(item.get("other", ""))
+
+            # --- IMPLEMENTASI IO TAG & SKALA ---
+
+            # 1. Odometer: io87 / 1000 (Fallback to io24)
+            raw_odometer = other_data.get("io87") or other_data.get("io24")
+            odometer_km = (
+                raw_odometer / 1000
+                if isinstance(raw_odometer, (int, float))
+                else None
+            )
+
+            # 2. Fuel Level: io85 / 10 (Fallback to io115)
+            raw_fuel_level = other_data.get("io85") or other_data.get("io115")
+            fuel_level_l = (
+                raw_fuel_level / 10 if isinstance(raw_fuel_level, (int, float)) else None
+            )
+
+            # 3. RPM: io84
+            rpm = other_data.get("io84")
+
+            # --- EKSTRAKSI FIELD LAIN DARI 'other' ---
+            ignition = other_data.get("ignition")
+            motion = other_data.get("motion")
+            engine_hours = other_data.get("enginehours")
+            battery_voltage = other_data.get("power")
+            sat = other_data.get("sat")
+            hdop = other_data.get("hdop")
+            pdop = other_data.get("pdop")
+
+            # --- FIELD KHUSUS (Valid) ---
+            # 'valid' diinfer: True jika jumlah satelit lebih dari 3
+            valid = True if isinstance(sat, (int, float)) and sat > 3 else False
+
+            # --- STATUS (dari group) ---
+            status_code = group.get("status") if isinstance(group, dict) else None
+            status_str = STATUS_MAP.get(status_code, None)
+
+            # 4. Kumpulkan Data (16 Kolom yang Diminta)
+            rows.append({
+                "timestamp": timestamp,
+                "device_id": device_id,
+                "latitude": latitude,
+                "longitude": longitude,
+                "speed": speed,
+                "ignition": ignition,
+                "motion": motion,
+                "odometer_km": odometer_km,
+                "engine_hours": engine_hours,
+                "fuel_level_l": fuel_level_l,
+                "rpm": rpm,
+                "battery_voltage": battery_voltage,
+                "sat": sat,
+                "hdop": hdop,
+                "pdop": pdop,
+                "valid": valid,
+                "status": status_str,
+            })
+
+    return rows
+

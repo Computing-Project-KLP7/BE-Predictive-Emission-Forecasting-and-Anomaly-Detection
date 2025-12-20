@@ -1,0 +1,198 @@
+2025-12-21 03:34:30 - emission-forecasting - INFO - Received prediction request: speed_mean=45.5 speed_max=80.0 speed_std=15.2 distance_delta_total=50.0 rpm_mean=1500.0 rpm_max=2500.0 engine_load_mean=45.0 is_moving_mean=0.85 is_idle_total=9.0 hour=14 day_of_week=2 is_weekend=0
+2025-12-21 03:34:30 - emission-forecasting - INFO - Starting emission prediction...
+2025-12-21 03:34:30 - emission-forecasting - INFO - Features array shape: (1, 12)
+2025-12-21 03:34:30 - emission-forecasting - INFO - Features values: [[4.55e+01 8.00e+01 1.52e+01 5.00e+01 1.50e+03 2.50e+03 4.50e+01 8.50e-01
+  9.00e+00 1.40e+01 2.00e+00 0.00e+00]]
+2025-12-21 03:34:32 - emission-forecasting - INFO - Models and scalers loaded successfully
+2025-12-21 03:34:32 - emission-forecasting - INFO - Scaled features for emissions: [[ 0.125033   -0.47668064 -1.09230108  0.35706371  9.48362579 18.57812057
+  -1.90200183  0.7403267  -1.11435541  0.05380551 -0.44177911 -0.57517568]]
+2025-12-21 03:34:32 - emission-forecasting - INFO - CO2 emissions prediction: 6346122.371396826 grams/hour
+2025-12-21 03:34:32 - emission-forecasting - INFO - Scaled features for intensity: [[ 0.125033   -0.47668064 -1.09230108  0.35706371  9.48362579 18.57812057
+  -1.90200183  0.7403267  -1.11435541  0.05380551 -0.44177911 -0.57517568]]
+2025-12-21 03:34:32 - emission-forecasting - INFO - CO2 intensity prediction: 1000.0 g/km
+2025-12-21 03:34:32 - emission-forecasting - INFO - Emission prediction completed successfully
+2025-12-21 03:38:58 - emission-forecasting - INFO - Received prediction request: speed_mean=45.5 speed_max=80.0 speed_std=15.2 distance_delta_total=50.0 rpm_mean=1500.0 rpm_max=2500.0 engine_load_mean=45.0 is_moving_mean=0.85 is_idle_total=9.0 hour=14 day_of_week=2 is_weekend=0
+2025-12-21 03:38:58 - emission-forecasting - INFO - Starting emission prediction...
+2025-12-21 03:38:58 - emission-forecasting - INFO - Features array shape: (1, 12)
+2025-12-21 03:38:58 - emission-forecasting - INFO - Features values: [[4.55e+01 8.00e+01 1.52e+01 5.00e+01 1.50e+03 2.50e+03 4.50e+01 8.50e-01
+  9.00e+00 1.40e+01 2.00e+00 0.00e+00]]
+2025-12-21 03:39:01 - emission-forecasting - INFO - Models and scalers loaded successfully
+2025-12-21 03:39:01 - emission-forecasting - INFO - Scaled features for emissions: [[ 0.125033   -0.47668064 -1.09230108  0.35706371  9.48362579 18.57812057
+  -1.90200183  0.7403267  -1.11435541  0.05380551 -0.44177911 -0.57517568]]
+2025-12-21 03:39:01 - emission-forecasting - INFO - CO2 emissions prediction: 6346122.371396826 grams/hour
+2025-12-21 03:39:01 - emission-forecasting - INFO - Scaled features for intensity: [[ 0.125033   -0.47668064 -1.09230108  0.35706371  9.48362579 18.57812057
+  -1.90200183  0.7403267  -1.11435541  0.05380551 -0.44177911 -0.57517568]]
+2025-12-21 03:39:01 - emission-forecasting - INFO - CO2 intensity prediction: 1000.0 g/km
+2025-12-21 03:39:01 - emission-forecasting - INFO - Emission prediction completed successfully
+2025-12-21 03:57:48 - emission-forecasting - INFO - Received anomaly detection request: speed=0.0 distance_delta=0.0 fuel_delta=0.0 fuel_consumption_rate=0.0 idle_duration=0.0 rpm=0.0 engine_load=0.0 co2_intensity=0.0
+2025-12-21 03:57:48 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 03:57:51 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 03:57:51 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 03:57:51 - emission-forecasting - INFO - Features values: [[0. 0. 0. 0. 0. 0. 0. 0.]]
+2025-12-21 03:57:51 - emission-forecasting - INFO - Scaled features: [[-0.91946339 -0.49962305  0.00654813 -0.33272379 -0.73037964 -2.0617993
+  -2.0617993  -0.25540447]]
+2025-12-21 03:57:51 - emission-forecasting - INFO - ML anomaly score: -0.5066736693130122, Detected: False
+2025-12-21 03:57:51 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 03:57:51 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 03:57:51 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 03:57:51 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 03:59:52 - emission-forecasting - INFO - Received anomaly detection request: speed=0.0 distance_delta=0.0 fuel_delta=0.0 fuel_consumption_rate=0.0 idle_duration=0.0 rpm=0.0 engine_load=0.0 co2_intensity=0.0
+2025-12-21 03:59:52 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 03:59:52 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 03:59:52 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 03:59:52 - emission-forecasting - INFO - Features values: [[0. 0. 0. 0. 0. 0. 0. 0.]]
+2025-12-21 03:59:52 - emission-forecasting - INFO - Scaled features: [[-0.91946339 -0.49962305  0.00654813 -0.33272379 -0.73037964 -2.0617993
+  -2.0617993  -0.25540447]]
+2025-12-21 03:59:52 - emission-forecasting - INFO - ML anomaly score: -0.5066736693130122, Detected: False
+2025-12-21 03:59:52 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 03:59:52 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 03:59:52 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 03:59:52 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 03:59:53 - emission-forecasting - INFO - Received anomaly detection request: speed=0.0 distance_delta=0.0 fuel_delta=0.0 fuel_consumption_rate=0.0 idle_duration=0.0 rpm=0.0 engine_load=0.0 co2_intensity=0.0
+2025-12-21 03:59:53 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 03:59:53 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 03:59:53 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 03:59:53 - emission-forecasting - INFO - Features values: [[0. 0. 0. 0. 0. 0. 0. 0.]]
+2025-12-21 03:59:53 - emission-forecasting - INFO - Scaled features: [[-0.91946339 -0.49962305  0.00654813 -0.33272379 -0.73037964 -2.0617993
+  -2.0617993  -0.25540447]]
+2025-12-21 03:59:53 - emission-forecasting - INFO - ML anomaly score: -0.5066736693130122, Detected: False
+2025-12-21 03:59:53 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 03:59:53 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 03:59:53 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 03:59:53 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:01:45 - emission-forecasting - INFO - Received daily anomaly report request: device_id=0 date='string' total_idle_minutes=0.0 average_co2_intensity=0.0
+2025-12-21 04:01:45 - emission-forecasting - INFO - Starting daily anomaly detection for device 0 on string
+2025-12-21 04:01:45 - emission-forecasting - INFO - Device 0: Total idle = 0.0 min, Excessive idle detected: False
+2025-12-21 04:01:45 - emission-forecasting - INFO - Daily anomaly detection completed successfully
+2025-12-21 04:01:48 - emission-forecasting - INFO - Received daily anomaly report request: device_id=0 date='string' total_idle_minutes=0.0 average_co2_intensity=0.0
+2025-12-21 04:01:48 - emission-forecasting - INFO - Starting daily anomaly detection for device 0 on string
+2025-12-21 04:01:48 - emission-forecasting - INFO - Device 0: Total idle = 0.0 min, Excessive idle detected: False
+2025-12-21 04:01:48 - emission-forecasting - INFO - Daily anomaly detection completed successfully
+2025-12-21 04:03:30 - emission-forecasting - INFO - Received anomaly detection request: speed=0.0 distance_delta=0.0 fuel_delta=0.0 fuel_consumption_rate=0.0 idle_duration=0.0 rpm=0.0 engine_load=0.0 co2_intensity=0.0
+2025-12-21 04:03:30 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:03:30 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:03:30 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:03:30 - emission-forecasting - INFO - Features values: [[0. 0. 0. 0. 0. 0. 0. 0.]]
+2025-12-21 04:03:30 - emission-forecasting - INFO - Scaled features: [[-0.91946339 -0.49962305  0.00654813 -0.33272379 -0.73037964 -2.0617993
+  -2.0617993  -0.25540447]]
+2025-12-21 04:03:30 - emission-forecasting - INFO - ML anomaly score: -0.5066736693130122, Detected: False
+2025-12-21 04:03:30 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:03:30 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:03:30 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:03:30 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:07:35 - emission-forecasting - INFO - Received anomaly detection request: speed=80.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:07:35 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:07:35 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:07:35 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:07:35 - emission-forecasting - INFO - Features values: [[ 8.0e+01  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:07:35 - emission-forecasting - INFO - Scaled features: [[ 1.06632733  4.50264089 -0.05502779  0.93873488 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:07:35 - emission-forecasting - INFO - ML anomaly score: -0.5525467376011215, Detected: False
+2025-12-21 04:07:35 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:07:35 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:07:35 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:07:35 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:04 - emission-forecasting - INFO - Received anomaly detection request: speed=200.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:04 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:04 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:04 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:04 - emission-forecasting - INFO - Features values: [[ 2.0e+02  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:08:04 - emission-forecasting - INFO - Scaled features: [[ 4.04501341  4.50264089 -0.05502779  0.93873488 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:08:04 - emission-forecasting - INFO - ML anomaly score: -0.5635490056225403, Detected: False
+2025-12-21 04:08:04 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:04 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:04 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:04 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:08 - emission-forecasting - INFO - Received anomaly detection request: speed=1000.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:08 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:08 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:08 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:08 - emission-forecasting - INFO - Features values: [[ 1.0e+03  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:08:08 - emission-forecasting - INFO - Scaled features: [[23.90292059  4.50264089 -0.05502779  0.93873488 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:08:08 - emission-forecasting - INFO - ML anomaly score: -0.5635490056225403, Detected: False
+2025-12-21 04:08:08 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:08 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:08 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:08 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:10 - emission-forecasting - INFO - Received anomaly detection request: speed=200.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:10 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:10 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:10 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:10 - emission-forecasting - INFO - Features values: [[ 2.0e+02  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:08:10 - emission-forecasting - INFO - Scaled features: [[ 4.04501341  4.50264089 -0.05502779  0.93873488 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:08:10 - emission-forecasting - INFO - ML anomaly score: -0.5635490056225403, Detected: False
+2025-12-21 04:08:10 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:10 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:10 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:10 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:12 - emission-forecasting - INFO - Received anomaly detection request: speed=80.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:12 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:12 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:12 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:12 - emission-forecasting - INFO - Features values: [[ 8.0e+01  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:08:12 - emission-forecasting - INFO - Scaled features: [[ 1.06632733  4.50264089 -0.05502779  0.93873488 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:08:12 - emission-forecasting - INFO - ML anomaly score: -0.5525467376011215, Detected: False
+2025-12-21 04:08:12 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:12 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:12 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:12 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:21 - emission-forecasting - INFO - Received anomaly detection request: speed=80.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=1.0 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:21 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:21 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:21 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:21 - emission-forecasting - INFO - Features values: [[ 8.0e+01  2.0e+00 -1.5e+00  1.0e+00  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:08:21 - emission-forecasting - INFO - Scaled features: [[ 1.06632733  4.50264089 -0.05502779  1.36255443 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:08:21 - emission-forecasting - INFO - ML anomaly score: -0.5572839164832367, Detected: False
+2025-12-21 04:08:21 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:21 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:21 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:21 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:24 - emission-forecasting - INFO - Received anomaly detection request: speed=80.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:24 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:24 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:24 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:24 - emission-forecasting - INFO - Features values: [[ 8.0e+01  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:08:24 - emission-forecasting - INFO - Scaled features: [[ 1.06632733  4.50264089 -0.05502779  0.93873488 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:08:24 - emission-forecasting - INFO - ML anomaly score: -0.5525467376011215, Detected: False
+2025-12-21 04:08:24 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:24 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:24 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:24 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:29 - emission-forecasting - INFO - Received anomaly detection request: speed=80.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=1000000.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:29 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:29 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:29 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:29 - emission-forecasting - INFO - Features values: [[ 8.0e+01  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  1.0e+06  7.5e+01  8.5e+01]]
+2025-12-21 04:08:29 - emission-forecasting - INFO - Scaled features: [[ 1.06632733e+00  4.50264089e+00 -5.50277923e-02  9.38734877e-01
+  -7.30379644e-01  5.01487250e+03  2.89888655e-01 -2.51744196e-01]]
+2025-12-21 04:08:29 - emission-forecasting - INFO - ML anomaly score: -0.5525467376011215, Detected: False
+2025-12-21 04:08:29 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:29 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:29 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:29 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:31 - emission-forecasting - INFO - Received anomaly detection request: speed=80.0 distance_delta=2.0 fuel_delta=-1.5 fuel_consumption_rate=0.75 idle_duration=0.0 rpm=2500.0 engine_load=75.0 co2_intensity=85.0
+2025-12-21 04:08:31 - emission-forecasting - INFO - Starting anomaly detection...
+2025-12-21 04:08:31 - emission-forecasting - INFO - Models and parameters loaded successfully
+2025-12-21 04:08:31 - emission-forecasting - INFO - Features array shape: (1, 8)
+2025-12-21 04:08:31 - emission-forecasting - INFO - Features values: [[ 8.0e+01  2.0e+00 -1.5e+00  7.5e-01  0.0e+00  2.5e+03  7.5e+01  8.5e+01]]
+2025-12-21 04:08:31 - emission-forecasting - INFO - Scaled features: [[ 1.06632733  4.50264089 -0.05502779  0.93873488 -0.73037964 10.48053645
+   0.28988866 -0.2517442 ]]
+2025-12-21 04:08:31 - emission-forecasting - INFO - ML anomaly score: -0.5525467376011215, Detected: False
+2025-12-21 04:08:31 - emission-forecasting - INFO - Fuel theft detected: False, Risk: 0.0
+2025-12-21 04:08:31 - emission-forecasting - INFO - Emission inefficiency detected: False
+2025-12-21 04:08:31 - emission-forecasting - INFO - Anomaly detected: False, Severity: SeverityLevel.LOW
+2025-12-21 04:08:31 - emission-forecasting - INFO - Anomaly detection completed successfully
+2025-12-21 04:08:58 - emission-forecasting - INFO - Received daily anomaly report request: device_id=0 date='string' total_idle_minutes=0.0 average_co2_intensity=0.0
+2025-12-21 04:08:58 - emission-forecasting - INFO - Starting daily anomaly detection for device 0 on string
+2025-12-21 04:08:58 - emission-forecasting - INFO - Device 0: Total idle = 0.0 min, Excessive idle detected: False
+2025-12-21 04:08:58 - emission-forecasting - INFO - Daily anomaly detection completed successfully
+2025-12-21 04:08:59 - emission-forecasting - INFO - Received daily anomaly report request: device_id=0 date='string' total_idle_minutes=0.0 average_co2_intensity=0.0
+2025-12-21 04:08:59 - emission-forecasting - INFO - Starting daily anomaly detection for device 0 on string
+2025-12-21 04:08:59 - emission-forecasting - INFO - Device 0: Total idle = 0.0 min, Excessive idle detected: False
+2025-12-21 04:08:59 - emission-forecasting - INFO - Daily anomaly detection completed successfully

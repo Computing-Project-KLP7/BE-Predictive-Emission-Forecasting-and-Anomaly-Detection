@@ -1,0 +1,379 @@
+{
+  "info": {
+    "name": "Emission Prediction & Anomaly Detection API",
+    "description": "Postman collection untuk testing emission prediction dan anomaly detection endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Emission Prediction",
+      "item": [
+        {
+          "name": "Predict - Normal Driving",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed_mean\": 60.0,\n  \"speed_max\": 90.0,\n  \"speed_std\": 15.5,\n  \"distance_delta_total\": 45.2,\n  \"rpm_mean\": 1800.0,\n  \"rpm_max\": 2200.0,\n  \"engine_load_mean\": 50.0,\n  \"is_moving_mean\": 0.85,\n  \"is_idle_total\": 5,\n  \"hour\": 14,\n  \"day_of_week\": 3,\n  \"is_weekend\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/emission/predict-hourly",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emission",
+                "predict-hourly"
+              ]
+            },
+            "description": "Prediksi emisi CO2 untuk normal driving scenario"
+          }
+        },
+        {
+          "name": "Predict - City Traffic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed_mean\": 25.0,\n  \"speed_max\": 60.0,\n  \"speed_std\": 20.0,\n  \"distance_delta_total\": 12.5,\n  \"rpm_mean\": 1200.0,\n  \"rpm_max\": 2000.0,\n  \"engine_load_mean\": 35.0,\n  \"is_moving_mean\": 0.40,\n  \"is_idle_total\": 30,\n  \"hour\": 18,\n  \"day_of_week\": 4,\n  \"is_weekend\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/emission/predict-hourly",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emission",
+                "predict-hourly"
+              ]
+            },
+            "description": "Prediksi emisi untuk city traffic dengan banyak idle"
+          }
+        },
+        {
+          "name": "Predict - High Speed",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed_mean\": 100.0,\n  \"speed_max\": 130.0,\n  \"speed_std\": 10.0,\n  \"distance_delta_total\": 95.0,\n  \"rpm_mean\": 2500.0,\n  \"rpm_max\": 3000.0,\n  \"engine_load_mean\": 75.0,\n  \"is_moving_mean\": 0.95,\n  \"is_idle_total\": 2,\n  \"hour\": 10,\n  \"day_of_week\": 5,\n  \"is_weekend\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/emission/predict-hourly",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emission",
+                "predict-hourly"
+              ]
+            },
+            "description": "Prediksi emisi untuk high-speed driving"
+          }
+        },
+        {
+          "name": "Predict - Weekend Leisure",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed_mean\": 55.0,\n  \"speed_max\": 80.0,\n  \"speed_std\": 12.0,\n  \"distance_delta_total\": 65.0,\n  \"rpm_mean\": 1700.0,\n  \"rpm_max\": 2100.0,\n  \"engine_load_mean\": 45.0,\n  \"is_moving_mean\": 0.80,\n  \"is_idle_total\": 8,\n  \"hour\": 15,\n  \"day_of_week\": 6,\n  \"is_weekend\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/emission/predict-hourly",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "emission",
+                "predict-hourly"
+              ]
+            },
+            "description": "Prediksi emisi untuk weekend leisure driving"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Anomaly Detection - Real-time",
+      "item": [
+        {
+          "name": "Detect - Fuel Theft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed\": 0,\n  \"distance_delta\": 0,\n  \"fuel_delta\": -10.0,\n  \"fuel_consumption_rate\": 0,\n  \"idle_duration\": 5,\n  \"rpm\": 0,\n  \"engine_load\": 0,\n  \"co2_intensity\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/detect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "detect"
+              ]
+            },
+            "description": "Deteksi fuel theft anomaly"
+          }
+        },
+        {
+          "name": "Detect - Normal Operation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed\": 60.0,\n  \"distance_delta\": 1.2,\n  \"fuel_delta\": -0.3,\n  \"fuel_consumption_rate\": 0.25,\n  \"idle_duration\": 0,\n  \"rpm\": 1800,\n  \"engine_load\": 50.0,\n  \"co2_intensity\": 42.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/detect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "detect"
+              ]
+            },
+            "description": "Deteksi normal driving (no anomaly)"
+          }
+        },
+        {
+          "name": "Detect - High Emission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed\": 50.0,\n  \"distance_delta\": 0.8,\n  \"fuel_delta\": -0.6,\n  \"fuel_consumption_rate\": 0.75,\n  \"idle_duration\": 1,\n  \"rpm\": 2000,\n  \"engine_load\": 70.0,\n  \"co2_intensity\": 150.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/detect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "detect"
+              ]
+            },
+            "description": "Deteksi high emission anomaly"
+          }
+        },
+        {
+          "name": "Detect - Excessive Fuel Consumption",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed\": 80.0,\n  \"distance_delta\": 2.0,\n  \"fuel_delta\": -1.5,\n  \"fuel_consumption_rate\": 0.75,\n  \"idle_duration\": 0,\n  \"rpm\": 2500,\n  \"engine_load\": 75.0,\n  \"co2_intensity\": 85.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/detect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "detect"
+              ]
+            },
+            "description": "Deteksi excessive fuel consumption"
+          }
+        },
+        {
+          "name": "Detect - Excessive Idling",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speed\": 0,\n  \"distance_delta\": 0.05,\n  \"fuel_delta\": -0.2,\n  \"fuel_consumption_rate\": 0,\n  \"idle_duration\": 15,\n  \"rpm\": 800,\n  \"engine_load\": 15.0,\n  \"co2_intensity\": 5.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/detect",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "detect"
+              ]
+            },
+            "description": "Deteksi excessive idling"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Anomaly Detection - Daily Report",
+      "item": [
+        {
+          "name": "Daily Report - Normal Day",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"total_idle_minutes\": 45,\n  \"total_distance_km\": 125.5,\n  \"total_fuel_consumed_liters\": 8.3,\n  \"average_co2_intensity\": 55.2,\n  \"max_co2_intensity\": 95.0,\n  \"total_harsh_accelerations\": 1,\n  \"total_harsh_brakes\": 1,\n  \"device_id\": \"VHCL001\",\n  \"report_date\": \"2024-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/daily-report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "daily-report"
+              ]
+            },
+            "description": "Daily report untuk normal driving day"
+          }
+        },
+        {
+          "name": "Daily Report - Excessive Idle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"total_idle_minutes\": 240,\n  \"total_distance_km\": 125.5,\n  \"total_fuel_consumed_liters\": 8.3,\n  \"average_co2_intensity\": 55.2,\n  \"max_co2_intensity\": 180.0,\n  \"total_harsh_accelerations\": 3,\n  \"total_harsh_brakes\": 2,\n  \"device_id\": \"VHCL001\",\n  \"report_date\": \"2024-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/daily-report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "daily-report"
+              ]
+            },
+            "description": "Daily report dengan excessive idle detection"
+          }
+        },
+        {
+          "name": "Daily Report - High Emissions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"total_idle_minutes\": 120,\n  \"total_distance_km\": 85.0,\n  \"total_fuel_consumed_liters\": 12.5,\n  \"average_co2_intensity\": 120.0,\n  \"max_co2_intensity\": 220.0,\n  \"total_harsh_accelerations\": 8,\n  \"total_harsh_brakes\": 6,\n  \"device_id\": \"VHCL002\",\n  \"report_date\": \"2024-01-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/anomaly/daily-report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "anomaly",
+                "daily-report"
+              ]
+            },
+            "description": "Daily report dengan high emission average"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}

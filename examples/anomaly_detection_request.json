@@ -1,0 +1,148 @@
+{
+  "description": "Contoh request body untuk Anomaly Detection Endpoint",
+  "endpoint": "POST /api/v1/anomaly/detect",
+  "example_1_fuel_theft_detected": {
+    "speed": 0,
+    "distance_delta": 0,
+    "fuel_delta": -10.0,
+    "fuel_consumption_rate": 0,
+    "idle_duration": 5,
+    "rpm": 0,
+    "engine_load": 0,
+    "co2_intensity": 0
+  },
+  "example_2_normal_driving": {
+    "speed": 60.0,
+    "distance_delta": 1.2,
+    "fuel_delta": -0.3,
+    "fuel_consumption_rate": 0.25,
+    "idle_duration": 0,
+    "rpm": 1800,
+    "engine_load": 50.0,
+    "co2_intensity": 42.5
+  },
+  "example_3_excessive_fuel_consumption": {
+    "speed": 80.0,
+    "distance_delta": 2.0,
+    "fuel_delta": -1.5,
+    "fuel_consumption_rate": 0.75,
+    "idle_duration": 0,
+    "rpm": 2500,
+    "engine_load": 75.0,
+    "co2_intensity": 85.0
+  },
+  "example_4_high_emission_inefficiency": {
+    "speed": 50.0,
+    "distance_delta": 0.8,
+    "fuel_delta": -0.6,
+    "fuel_consumption_rate": 0.75,
+    "idle_duration": 1,
+    "rpm": 2000,
+    "engine_load": 70.0,
+    "co2_intensity": 150.0
+  },
+  "example_5_excessive_idling": {
+    "speed": 0,
+    "distance_delta": 0.05,
+    "fuel_delta": -0.2,
+    "fuel_consumption_rate": 0,
+    "idle_duration": 15,
+    "rpm": 800,
+    "engine_load": 15.0,
+    "co2_intensity": 5.0
+  },
+  "example_6_city_driving_with_anomaly": {
+    "speed": 30.0,
+    "distance_delta": 0.5,
+    "fuel_delta": -0.8,
+    "fuel_consumption_rate": 1.6,
+    "idle_duration": 5,
+    "rpm": 1500,
+    "engine_load": 45.0,
+    "co2_intensity": 95.0
+  },
+  "example_7_multiple_anomalies": {
+    "speed": 0,
+    "distance_delta": 0,
+    "fuel_delta": -12.0,
+    "fuel_consumption_rate": 0,
+    "idle_duration": 25,
+    "rpm": 500,
+    "engine_load": 10.0,
+    "co2_intensity": 200.0
+  },
+  "example_8_healthy_vehicle": {
+    "speed": 50.0,
+    "distance_delta": 1.0,
+    "fuel_delta": -0.2,
+    "fuel_consumption_rate": 0.2,
+    "idle_duration": 0,
+    "rpm": 1600,
+    "engine_load": 40.0,
+    "co2_intensity": 35.0
+  },
+  "feature_descriptions": {
+    "speed": "Kecepatan saat ini (km/h) - Range: 0-200",
+    "distance_delta": "Jarak tempuh sejak record sebelumnya (km) - Range: 0-200",
+    "fuel_delta": "Perubahan fuel level (L), negatif = konsumsi - Range: -50 to +50",
+    "fuel_consumption_rate": "Konsumsi bahan bakar per km (L/km) - Range: 0-2",
+    "idle_duration": "Durasi idle dalam record ini (menit) - Range: 0-1440",
+    "rpm": "RPM mesin - Range: 0-3000",
+    "engine_load": "Beban mesin (%) - Range: 0-100",
+    "co2_intensity": "Intensitas emisi CO2 (g/km) - Range: 0-1000"
+  },
+  "anomaly_detection_rules": {
+    "fuel_theft": {
+      "description": "Fuel drop besar dengan kendaraan diam",
+      "triggers": [
+        "fuel_delta < -5.0 (drop > 5 liter)",
+        "speed = 0 (kendaraan diam)",
+        "distance_delta < 0.1 (tidak ada pergerakan)"
+      ],
+      "example": "example_1_fuel_theft_detected"
+    },
+    "emission_inefficiency": {
+      "description": "CO2 intensity lebih tinggi dari normal",
+      "triggers": [
+        "co2_intensity > mean + 2*std",
+        "Threshold dinamis berdasarkan data historis"
+      ],
+      "example": "example_4_high_emission_inefficiency"
+    },
+    "ml_anomaly": {
+      "description": "Deteksi anomali kombinasi menggunakan Isolation Forest",
+      "triggers": [
+        "Isolation Forest score < 0",
+        "Mendeteksi pola abnormal dari kombinasi features"
+      ],
+      "example": "example_7_multiple_anomalies"
+    },
+    "excessive_idle": {
+      "description": "Durasi idle terlalu lama (deteksi di daily-report)",
+      "triggers": [
+        "total_idle_minutes > 120 per hari",
+        "Dideteksi melalui endpoint /daily-report"
+      ],
+      "example": "example_5_excessive_idling"
+    }
+  },
+  "interpretasi_hasil": {
+    "is_anomaly_true": "Ada anomali terdeteksi",
+    "is_anomaly_false": "Tidak ada anomali",
+    "severity_critical": "URGENT - Ada fuel theft atau kombinasi anomali serious",
+    "severity_high": "PENTING - Multiple anomalies atau strong ML signal",
+    "severity_medium": "PERLU MONITOR - Single anomaly terdeteksi",
+    "severity_low": "INFO - Warning signs tapi tidak critical",
+    "fuel_theft_risk_0": "Tidak ada risiko fuel theft",
+    "fuel_theft_risk_1": "Risiko fuel theft sangat tinggi",
+    "emission_score_0": "Emisi normal",
+    "emission_score_1": "Emisi sangat tinggi"
+  },
+  "tips": {
+    "note_1": "Semua nilai harus numerik (float atau int)",
+    "note_2": "fuel_delta negatif = konsumsi, positif = pengisian",
+    "note_3": "co2_intensity = emisi per km (g/km), bukan grams per liter",
+    "note_4": "idle_duration dalam menit, bukan jam atau detik",
+    "note_5": "Untuk deteksi excessive idle, gunakan /daily-report endpoint"
+  }
+}

@@ -9,5 +9,5 @@ app = FastAPI(
     version="1.0.0",
 )
 
-app.include_router(main_router)
+app.include_router(main_router) # add main router for general routes
 app.include_router(api_router, prefix="/api/v1")

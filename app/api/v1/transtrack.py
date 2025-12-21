@@ -154,7 +154,7 @@ async def device_summary_csv(
     return StreamingResponse(
         iter([csv_content]),
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=devices_summary.csv"},
+        headers={"Content-Disposition": "attachment; filename=devices.csv"},
     )
 
 
@@ -194,5 +194,5 @@ async def history_processed_csv(
     return StreamingResponse(
         iter([csv_content]),
         media_type="text/csv",
-        headers={"Content-Disposition": f"attachment; filename=history_device_{device_id}.csv"},
+        headers={"Content-Disposition": "attachment; filename=history.csv"},
     )

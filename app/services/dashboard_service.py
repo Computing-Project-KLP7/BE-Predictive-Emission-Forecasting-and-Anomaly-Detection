@@ -10,18 +10,68 @@ IDLE_TIME_CRITICAL_MINS = 120  # 2 jam dalam menit
 IDLE_TIME_WARNING_MINS = 30  # 30 menit
 
 
+def _get_date_from_timestamp(timestamp_str: str) -> str:
+    """
+    Extract tanggal dari timestamp string.
+    
+    Args:
+        timestamp_str: Timestamp dalam format "YYYY-MM-DD HH:MM:SS"
+        
+    Returns:
+        Tanggal dalam format "YYYY-MM-DD"
+    """
+    try:
+        if isinstance(timestamp_str, str):
+            # Ambil bagian tanggal (first 10 chars = "YYYY-MM-DD")
+            return timestamp_str[:10]
+        return None
+    except Exception:
+        return None
+
+
+def _filter_history_by_date(history_data: list[dict], target_date: str = None) -> list[dict]:
+    """
+    Filter history data untuk hanya data pada hari yang sama.
+    
+    Args:
+        history_data: List of history records
+        target_date: Tanggal target dalam format "YYYY-MM-DD" (default: hari ini)
+        
+    Returns:
+        Filtered list of history records
+    """
+    if target_date is None:
+        target_date = datetime.now().strftime("%Y-%m-%d")
+    
+    filtered_data = []
+    for item in history_data:
+        timestamp = item.get("timestamp")
+        if timestamp:
+            item_date = _get_date_from_timestamp(timestamp)
+            if item_date == target_date:
+                filtered_data.append(item)
+    
+    return filtered_data
+
+
 def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
     """
     Menghitung metrik dashboard dari processed history data.
+    
+    PENTING: Hanya menggunakan data dari hari yang sama (berdasarkan timestamp).
 
     Args:
         history_data: List dari process_history_data dengan fields: fuel_level_l, odometer_km,
-                      engine_idle, status, dll
+                      engine_idle, status, timestamp, dll
 
     Returns:
         Dict dengan metrics: total_emissions_kg, emission_intensity_gco2_km,
         idle_time_hours, status_color, summary
     """
+    # Filter data hanya untuk hari ini
+    today = datetime.now().strftime("%Y-%m-%d")
+    history_data = _filter_history_by_date(history_data, target_date=today)
+    
     if not history_data:
         return {
             "total_emissions_kg": 0.0,
@@ -36,7 +86,7 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
             },
         }
 
-    # Kalkulasi total fuel consumed dan total distance
+    # Kalkulasi total fuel consumed dan total distance menggunakan delta (perubahan dari record sebelumnya)
     total_fuel_consumed_l = 0.0
     total_distance_km = 0.0
     current_idle_time_mins = 0.0
@@ -48,17 +98,36 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
     idle_start_time = None
     idle_end_time = None
     is_currently_idle = False
+    
+    # Track previous values untuk menghitung delta
+    prev_fuel_level_l = None
+    prev_odometer_km = None
 
     for item in history_data:
-        # Fuel consumption
-        fuel = item.get("fuel_level_l")
-        if isinstance(fuel, (int, float)) and fuel > 0:
-            total_fuel_consumed_l += fuel
-
-        # Distance
-        distance = item.get("odometer_km")
-        if isinstance(distance, (int, float)) and distance > 0:
-            total_distance_km += distance
+        # Current values
+        current_fuel_level_l = item.get("fuel_level_l")
+        current_odometer_km = item.get("odometer_km")
+        
+        # Fuel consumption: Hitung delta (selisih) dari record sebelumnya
+        # Fuel consumption = previous_level - current_level (negatif = konsumsi)
+        if prev_fuel_level_l is not None and isinstance(current_fuel_level_l, (int, float)):
+            fuel_delta = prev_fuel_level_l - current_fuel_level_l
+            # Hanya tambahkan jika positif (actual consumption, tidak refuel)
+            if fuel_delta > 0 and fuel_delta < 100:  # Filter outliers
+                total_fuel_consumed_l += fuel_delta
+        
+        # Distance: Hitung delta (selisih) dari record sebelumnya
+        if prev_odometer_km is not None and isinstance(current_odometer_km, (int, float)):
+            distance_delta = current_odometer_km - prev_odometer_km
+            # Hanya tambahkan jika positif dan reasonable (< 200 km per record)
+            if 0 < distance_delta < 200:
+                total_distance_km += distance_delta
+        
+        # Update previous values untuk iterasi berikutnya
+        if isinstance(current_fuel_level_l, (int, float)):
+            prev_fuel_level_l = current_fuel_level_l
+        if isinstance(current_odometer_km, (int, float)):
+            prev_odometer_km = current_odometer_km
 
         # Ambil timestamp terakhir dan status
         timestamp = item.get("timestamp")
@@ -141,6 +210,8 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
             "last_status": current_status,
             "last_timestamp": last_timestamp,
             "emission_factor_kgco2_per_liter": DIESEL_EMISSION_FACTOR,
+            "calculation_date": today,
+            "data_records_used": len(history_data),
         },
     }
 

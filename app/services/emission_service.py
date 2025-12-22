@@ -13,7 +13,8 @@ except ImportError:
     HAS_JOBLIB = False
 
 # Path ke model files
-MODEL_DIR = os.path.join(os.path.dirname(__file__), '..', 'models', 'emission')
+# Use absolute path to ensure it works in both dev and production (Vercel)
+MODEL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'models', 'emission'))
 
 # Cache untuk loaded models
 _models_cache = {}
@@ -26,7 +27,7 @@ def load_model(filename: str):
     
     filepath = os.path.join(MODEL_DIR, filename)
     if not os.path.exists(filepath):
-        raise FileNotFoundError(f"Model file not found: {filepath}")
+        raise FileNotFoundError(f"Model file not found: {filepath} (MODEL_DIR={MODEL_DIR})")
     
     try:
         # Try joblib first (better for sklearn models)

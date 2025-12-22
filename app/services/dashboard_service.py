@@ -1,8 +1,13 @@
 import logging
 from typing import Any, Dict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import os
 
 logger = logging.getLogger(__name__)
+
+# Timezone configuration - use UTC for consistency across environments
+# Development and Production both use UTC
+APP_TIMEZONE = os.getenv('APP_TIMEZONE', 'UTC')
 
 # Konstanta konversi emisi
 DIESEL_EMISSION_FACTOR = 2.68  # kg CO2 per liter solar/diesel
@@ -32,16 +37,18 @@ def _get_date_from_timestamp(timestamp_str: str) -> str:
 def _filter_history_by_date(history_data: list[dict], target_date: str = None) -> list[dict]:
     """
     Filter history data untuk hanya data pada hari yang sama.
+    Uses UTC timezone for consistency between dev and prod environments.
     
     Args:
         history_data: List of history records
-        target_date: Tanggal target dalam format "YYYY-MM-DD" (default: hari ini)
+        target_date: Tanggal target dalam format "YYYY-MM-DD" (default: hari ini UTC)
         
     Returns:
         Filtered list of history records
     """
     if target_date is None:
-        target_date = datetime.now().strftime("%Y-%m-%d")
+        # Use UTC timezone explicitly - this ensures consistency between dev and prod
+        target_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     
     filtered_data = []
     for item in history_data:
@@ -57,8 +64,7 @@ def _filter_history_by_date(history_data: list[dict], target_date: str = None) -
 def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
     """
     Menghitung metrik dashboard dari processed history data.
-    
-    PENTING: Hanya menggunakan data dari hari yang sama (berdasarkan timestamp).
+    Uses UTC timezone for consistency between development and production.
 
     Args:
         history_data: List dari process_history_data dengan fields: fuel_level_l, odometer_km,
@@ -68,8 +74,8 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
         Dict dengan metrics: total_emissions_kg, emission_intensity_gco2_km,
         idle_time_hours, status_color, summary
     """
-    # Filter data hanya untuk hari ini
-    today = datetime.now().strftime("%Y-%m-%d")
+    # Filter data hanya untuk hari ini (UTC for consistency)
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     history_data = _filter_history_by_date(history_data, target_date=today)
     
     if not history_data:
@@ -159,7 +165,7 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
             
             # Jika masih idle, gunakan waktu sekarang; jika sudah berakhir, gunakan idle_end_time
             if is_currently_idle:
-                end_time = datetime.now()
+                end_time = datetime.now(timezone.utc)
             else:
                 end_time = datetime.strptime(idle_end_time, "%Y-%m-%d %H:%M:%S")
             
@@ -235,7 +241,7 @@ def generate_dashboard_summary(
     return {
         "device_id": device_id,
         "date_range": date_range,
-        "timestamp": datetime.now().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "metrics": metrics,
         "recommendations": _get_recommendations(metrics),
     }

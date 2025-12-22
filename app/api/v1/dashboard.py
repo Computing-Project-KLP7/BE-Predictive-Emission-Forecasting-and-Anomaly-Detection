@@ -1,5 +1,5 @@
 from typing import Any
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Query
 from app.services.transtrack_service import get_history, process_history_data
 from app.services.dashboard_service import calculate_dashboard_metrics, generate_dashboard_summary
@@ -33,8 +33,8 @@ async def dashboard_metrics(
     Returns:
     - Dashboard metrics dengan emissions, intensity, idle time, status, dan recommendations
     """
-    # Get current date and yesterday's date untuk mengambil data harian
-    now = datetime.now()
+    # Get current date (UTC for consistency between dev and prod)
+    now = datetime.now(timezone.utc)
     today = now.strftime("%Y-%m-%d")
     start_time = "00:00:00"
     end_time = now.strftime("%H:%M:%S")

@@ -210,13 +210,13 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
         status_reason = "Kondisi baik"
 
     result = {
-        "total_emissions_kg": round(total_emissions_kg, 2),
-        "emission_intensity_gco2_km": round(emission_intensity_gco2_km, 2),
-        "idle_time_hours": round(total_idle_minutes / 60, 2),
+        "total_emissions_kg": round(total_emissions_kg / 1000, 2),
+        "emission_intensity_gco2_km": round(emission_intensity_gco2_km / 100, 2),
+        "idle_time_hours": round(total_idle_minutes / 60 / 2, 2),
         "status_color": status_color,
         "status_reason": status_reason,
         "details": {
-            "total_fuel_consumed_l": round(total_fuel_consumed_l, 2),
+            "total_fuel_consumed_l": round(total_fuel_consumed_l / 1000, 2),
             "total_distance_km": round(total_distance_km, 2),
             "idle_time_minutes": round(total_idle_minutes, 2),
             "last_status": current_status,

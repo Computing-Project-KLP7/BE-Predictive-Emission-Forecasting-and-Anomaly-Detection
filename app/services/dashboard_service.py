@@ -95,40 +95,49 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
     # Kalkulasi total fuel consumed dan total distance menggunakan delta (perubahan dari record sebelumnya)
     total_fuel_consumed_l = 0.0
     total_distance_km = 0.0
-    current_idle_time_mins = 0.0
+    total_idle_minutes = 0.0
     has_theft_alert = False
     last_timestamp = None
     current_status = None
-    
-    # Untuk tracking idle period: dari kapan idle dimulai sampai kapan berakhir
-    idle_start_time = None
-    idle_end_time = None
-    is_currently_idle = False
-    
+
     # Track previous values untuk menghitung delta
     prev_fuel_level_l = None
     prev_odometer_km = None
 
-    for item in history_data:
+    # Sort history by timestamp ascending to compute deltas correctly
+    def _parse_ts(item):
+        ts = item.get("timestamp")
+        if not ts:
+            return datetime.min
+        try:
+            return datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            return datetime.min
+
+    sorted_history = sorted(history_data, key=_parse_ts)
+
+    # For idle accumulation across multiple idle periods
+    idle_period_start = None
+    for item in sorted_history:
         # Current values
         current_fuel_level_l = item.get("fuel_level_l")
         current_odometer_km = item.get("odometer_km")
-        
+
         # Fuel consumption: Hitung delta (selisih) dari record sebelumnya
-        # Fuel consumption = previous_level - current_level (negatif = konsumsi)
+        # Fuel consumption = previous_level - current_level (positif = consumption)
         if prev_fuel_level_l is not None and isinstance(current_fuel_level_l, (int, float)):
             fuel_delta = prev_fuel_level_l - current_fuel_level_l
             # Hanya tambahkan jika positif (actual consumption, tidak refuel)
-            if fuel_delta > 0 and fuel_delta < 100:  # Filter outliers
+            if 0 < fuel_delta < 100:  # Filter outliers
                 total_fuel_consumed_l += fuel_delta
-        
+
         # Distance: Hitung delta (selisih) dari record sebelumnya
         if prev_odometer_km is not None and isinstance(current_odometer_km, (int, float)):
             distance_delta = current_odometer_km - prev_odometer_km
             # Hanya tambahkan jika positif dan reasonable (< 200 km per record)
             if 0 < distance_delta < 200:
                 total_distance_km += distance_delta
-        
+
         # Update previous values untuk iterasi berikutnya
         if isinstance(current_fuel_level_l, (int, float)):
             prev_fuel_level_l = current_fuel_level_l
@@ -145,36 +154,33 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
         # Check for theft alert
         if status == "Theft":
             has_theft_alert = True
-        
-        # Track idle periods
-        # Jika status sekarang adalah "Idle" atau "Start" (awal dari Idle)
-        if status in ["Idle", "Start"]:
-            if not idle_start_time:  # Catat waktu dimulainya idle
-                idle_start_time = timestamp
-            idle_end_time = timestamp  # Update waktu terakhir masih idle
-            is_currently_idle = True
-        elif status in ["Drive", "End"]:
-            # Status berubah dari Idle ke Drive/End, jadi idle sudah berakhir
-            is_currently_idle = False
 
-    # Kalkulasi idle time dari idle_start_time ke idle_end_time
-    # Atau dari idle_start_time ke sekarang jika masih idle
-    if idle_start_time and idle_end_time:
+        # Track idle periods across the day
+        if status in ["Idle", "Start"]:
+            if idle_period_start is None and timestamp:
+                try:
+                    idle_period_start = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    idle_period_start = None
+        elif status in ["Drive", "End"]:
+            if idle_period_start and timestamp:
+                try:
+                    idle_period_end = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+                    diff = idle_period_end - idle_period_start
+                    total_idle_minutes += max(0.0, diff.total_seconds() / 60)
+                except Exception:
+                    pass
+                finally:
+                    idle_period_start = None
+
+    # Jika masih ada idle period yang belum selesai (masih idle sampai sekarang)
+    if idle_period_start:
         try:
-            start_time = datetime.strptime(idle_start_time, "%Y-%m-%d %H:%M:%S")
-            
-            # Jika masih idle, gunakan waktu sekarang; jika sudah berakhir, gunakan idle_end_time
-            if is_currently_idle:
-                end_time = datetime.now(timezone.utc)
-            else:
-                end_time = datetime.strptime(idle_end_time, "%Y-%m-%d %H:%M:%S")
-            
-            time_diff = end_time - start_time
-            current_idle_time_mins = time_diff.total_seconds() / 60
-        except (ValueError, TypeError):
-            current_idle_time_mins = 0.0
-    else:
-        current_idle_time_mins = 0.0
+            current_time = datetime.now(timezone.utc)
+            diff = current_time - idle_period_start
+            total_idle_minutes += max(0.0, diff.total_seconds() / 60)
+        except Exception:
+            pass
 
     # 1. Kalkulasi Total Emisi Harian (kgCO2)
     total_emissions_kg = total_fuel_consumed_l * DIESEL_EMISSION_FACTOR
@@ -188,17 +194,17 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
         emission_intensity_gco2_km = 0.0
 
     # 3. Tentukan Status Warna (Traffic Light)
-    if current_idle_time_mins > IDLE_TIME_CRITICAL_MINS or has_theft_alert:
+    if total_idle_minutes > IDLE_TIME_CRITICAL_MINS or has_theft_alert:
         status_color = "🔴 Red (Critical)"
         status_reason = (
-            "Idle time > 2 jam" if current_idle_time_mins > IDLE_TIME_CRITICAL_MINS else ""
+            "Idle time > 2 jam" if total_idle_minutes > IDLE_TIME_CRITICAL_MINS else ""
         )
         if has_theft_alert:
             status_reason += " | Theft alert detected"
         status_reason = status_reason.strip(" |")
-    elif current_idle_time_mins > IDLE_TIME_WARNING_MINS:
+    elif total_idle_minutes > IDLE_TIME_WARNING_MINS:
         status_color = "🟡 Yellow (Warning)"
-        status_reason = f"Idle time > 30 menit ({current_idle_time_mins:.1f} menit)"
+        status_reason = f"Idle time > 30 menit ({total_idle_minutes:.1f} menit)"
     else:
         status_color = "🟢 Green (Good)"
         status_reason = "Kondisi baik"
@@ -206,13 +212,13 @@ def calculate_dashboard_metrics(history_data: list[dict]) -> Dict[str, Any]:
     result = {
         "total_emissions_kg": round(total_emissions_kg, 2),
         "emission_intensity_gco2_km": round(emission_intensity_gco2_km, 2),
-        "idle_time_hours": round(current_idle_time_mins / 60, 2),
+        "idle_time_hours": round(total_idle_minutes / 60, 2),
         "status_color": status_color,
         "status_reason": status_reason,
         "details": {
             "total_fuel_consumed_l": round(total_fuel_consumed_l, 2),
             "total_distance_km": round(total_distance_km, 2),
-            "idle_time_minutes": round(current_idle_time_mins, 2),
+            "idle_time_minutes": round(total_idle_minutes, 2),
             "last_status": current_status,
             "last_timestamp": last_timestamp,
             "emission_factor_kgco2_per_liter": DIESEL_EMISSION_FACTOR,
